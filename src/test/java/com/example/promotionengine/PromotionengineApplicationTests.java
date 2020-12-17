@@ -3,6 +3,7 @@ package com.example.promotionengine;
 import com.example.promotionengine.models.Cart;
 import com.example.promotionengine.models.Item;
 import com.example.promotionengine.models.ItemPrice;
+import com.example.promotionengine.service.Buy2ItemPromotion;
 import com.example.promotionengine.service.BuyNPromotionService;
 import com.example.promotionengine.service.CartService;
 import com.example.promotionengine.service.Promotion;
@@ -90,5 +91,31 @@ class PromotionengineApplicationTests {
         promotions.add(new BuyNPromotionService(items.get('B'), 2, 50));
 
         assert (cartService.getCartPriceWithPromotion(cart, itemPrice, promotions) == 220);
+    }
+
+    @Test
+    void cartWithBuy2ItemPromotion(){
+        /*
+        Active Promotions
+        A + B => 60
+
+        Scenario A
+        2 * A 50
+        3 * B 30
+        1 * C 20
+
+        total = 170
+         */
+
+        Map<Item, Integer> itemsWithQuantity = new HashMap<>();
+        itemsWithQuantity.put(items.get('A'), 2);
+        itemsWithQuantity.put(items.get('B'), 3);
+        itemsWithQuantity.put(items.get('C'), 1);
+        Cart cart = new Cart(itemsWithQuantity);
+
+        ArrayList<Promotion> promotions = new ArrayList<>();
+        promotions.add(new Buy2ItemPromotion(items.get('A'), items.get('B'), 60));
+
+        assert (cartService.getCartPriceWithPromotion(cart, itemPrice, promotions) == 170);
     }
 }
