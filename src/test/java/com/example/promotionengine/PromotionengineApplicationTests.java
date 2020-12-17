@@ -18,36 +18,37 @@ class PromotionengineApplicationTests {
 
 
     CartService cartService;
+    Map<Character, Item> items;
+    ItemPrice itemPrice;
 
     @BeforeEach
     void contextLoads() {
+
+        items = new HashMap<>();
+        items.put('A', new Item('A'));
+        items.put('B', new Item('B'));
+        items.put('C', new Item('C'));
+        items.put('D', new Item('D'));
+
         cartService = CartService.getCartServiceInstance();
+        Map<Item, Integer> itemPerUnit = new HashMap<>();
+        itemPerUnit.put(items.get('A'), 50);
+        itemPerUnit.put(items.get('B'), 30);
+        itemPerUnit.put(items.get('C'), 20);
+        itemPerUnit.put(items.get('D'), 15);
+        itemPrice = new ItemPrice(itemPerUnit);
     }
 
     @Test
     void cartPriceWithoutPromotion(){
 
-        Item itemA = new Item('A');
-        Item itemB = new Item('B');
-        Item itemC = new Item('C');
-        Item itemD = new Item('D');
-
-        Map<Item, Integer> itemPerUnit = new HashMap<>();
-        itemPerUnit.put(itemA, 50);
-        itemPerUnit.put(itemB, 30);
-        itemPerUnit.put(itemC, 20);
-        itemPerUnit.put(itemD, 15);
-
-        ItemPrice itemPrice = new ItemPrice(itemPerUnit);
-
         Map<Item, Integer> itemsWithQuantity = new HashMap<>();
-        itemsWithQuantity.put(itemA, 1);
-        itemsWithQuantity.put(itemB, 1);
-        itemsWithQuantity.put(itemC, 1);
+        itemsWithQuantity.put(items.get('A'), 1);
+        itemsWithQuantity.put(items.get('B'), 1);
+        itemsWithQuantity.put(items.get('C'), 1);
 
         Cart cart = new Cart(itemsWithQuantity);
         assert (cartService.getCartPrice(cart, itemPrice) == 100);
-
 
     }
 }
