@@ -1,5 +1,6 @@
 package com.example.promotionengine;
 
+import com.example.promotionengine.exception.InvalidCartException;
 import com.example.promotionengine.models.Cart;
 import com.example.promotionengine.models.Item;
 import com.example.promotionengine.models.ItemPrice;
@@ -7,6 +8,7 @@ import com.example.promotionengine.service.Buy2ItemPromotion;
 import com.example.promotionengine.service.BuyNPromotionService;
 import com.example.promotionengine.service.CartService;
 import com.example.promotionengine.service.Promotion;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +17,8 @@ import org.springframework.util.Assert;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @SpringBootTest
 class PromotionengineApplicationTests {
@@ -43,7 +47,7 @@ class PromotionengineApplicationTests {
     }
 
     @Test
-    void cartPriceWithoutPromotion(){
+    void cartPriceWithoutPromotion() throws InvalidCartException {
         /*
         Active Promotions
 
@@ -66,7 +70,7 @@ class PromotionengineApplicationTests {
     }
 
     @Test
-    void cartWithBuyNPromotion(){
+    void cartWithBuyNPromotion() throws InvalidCartException {
 
         /*
         Active Promotions
@@ -94,7 +98,7 @@ class PromotionengineApplicationTests {
     }
 
     @Test
-    void cartWithBuy2ItemPromotion(){
+    void cartWithBuy2ItemPromotion() throws InvalidCartException {
         /*
         Active Promotions
         A + B => 60
@@ -120,7 +124,7 @@ class PromotionengineApplicationTests {
     }
 
     @Test
-    void cartWithMixPromotionsHavingOnlyBuyNPromotionEligibile(){
+    void cartWithMixPromotionsHavingOnlyBuyNPromotionEligibile() throws InvalidCartException {
         /*
        Active Promotions
         3 of A's for 130
@@ -151,7 +155,7 @@ class PromotionengineApplicationTests {
     }
 
     @Test
-    void cartWithMixPromotionsHavingMultiplePromotionEligibile(){
+    void cartWithMixPromotionsHavingMultiplePromotionEligibile() throws InvalidCartException {
         /*
        Active Promotions
         3 of A's for 130
@@ -181,5 +185,11 @@ class PromotionengineApplicationTests {
         promotions.add(new Buy2ItemPromotion(items.get('C'), items.get('D'), 30));
 
         assert (cartService.getCartPriceWithPromotion(cart, itemPrice, promotions) == 280);
+    }
+    @Test
+    void invalidCartException() throws InvalidCartException {
+        assertThatExceptionOfType(InvalidCartException.class).isThrownBy(() ->cartService.getCartPriceWithPromotion(null,
+                null, null));
+
     }
 }
