@@ -9,7 +9,7 @@ import java.util.Map;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class Cart<Item> {
+public class Cart {
 
     private Map<Item, Integer> itemsWithQuantity;
 

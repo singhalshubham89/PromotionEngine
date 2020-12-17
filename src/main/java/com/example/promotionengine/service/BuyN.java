@@ -18,6 +18,6 @@ public class BuyN implements PromotionEngine {
 
     @Override
     public int totalAfterPromotion(Cart cart, ItemPrice itemPrice) {
-        return cart.
+        return 0;
     }
 }
