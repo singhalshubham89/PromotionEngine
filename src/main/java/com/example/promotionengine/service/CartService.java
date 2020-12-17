@@ -4,6 +4,7 @@ import com.example.promotionengine.models.Cart;
 import com.example.promotionengine.models.Item;
 import com.example.promotionengine.models.ItemPrice;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 
@@ -26,6 +27,14 @@ public class CartService {
         }
 
         return totalPriceWithoutPromotion;
+    }
 
+
+    public int getCartPriceWithPromotion(Cart cart, ItemPrice itemPrice, ArrayList<Promotion> promotions){
+        int totalPrice = getCartPrice(cart, itemPrice);
+        for(Promotion promotion: promotions){
+            totalPrice = totalPrice - promotion.priceDeductedAfterPromotion(cart, itemPrice);
+        }
+        return totalPrice;
     }
 }

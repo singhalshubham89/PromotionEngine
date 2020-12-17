@@ -3,7 +3,9 @@ package com.example.promotionengine;
 import com.example.promotionengine.models.Cart;
 import com.example.promotionengine.models.Item;
 import com.example.promotionengine.models.ItemPrice;
+import com.example.promotionengine.service.BuyNPromotionService;
 import com.example.promotionengine.service.CartService;
+import com.example.promotionengine.service.Promotion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,6 +43,16 @@ class PromotionengineApplicationTests {
 
     @Test
     void cartPriceWithoutPromotion(){
+        /*
+        Active Promotions
+
+        Scenario A
+        1 * A 50
+        1 * B 30
+        1 * C 20
+
+        total = 100
+         */
 
         Map<Item, Integer> itemsWithQuantity = new HashMap<>();
         itemsWithQuantity.put(items.get('A'), 1);
@@ -50,5 +62,33 @@ class PromotionengineApplicationTests {
         Cart cart = new Cart(itemsWithQuantity);
         assert (cartService.getCartPrice(cart, itemPrice) == 100);
 
+    }
+
+    @Test
+    void cartWithBuyNPromotion(){
+
+        /*
+        Active Promotions
+        2 A => 120
+        2 B => 50
+        Scenario A
+        2 * A 50
+        3 * B 30
+        1 * C 20
+
+        total = 220
+         */
+
+        Map<Item, Integer> itemsWithQuantity = new HashMap<>();
+        itemsWithQuantity.put(items.get('A'), 2);
+        itemsWithQuantity.put(items.get('B'), 3);
+        itemsWithQuantity.put(items.get('C'), 1);
+        Cart cart = new Cart(itemsWithQuantity);
+
+        ArrayList<Promotion> promotions = new ArrayList<>();
+        promotions.add(new BuyNPromotionService(items.get('A'), 2, 120));
+        promotions.add(new BuyNPromotionService(items.get('B'), 2, 50));
+
+        assert (cartService.getCartPriceWithPromotion(cart, itemPrice, promotions) == 220);
     }
 }
